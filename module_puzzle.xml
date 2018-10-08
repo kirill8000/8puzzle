@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_puzzle" default="compile.module.puzzle">
+  <dirname property="module.puzzle.basedir" file="${ant.file.module_puzzle}"/>
+  
+  <property name="module.jdk.home.puzzle" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.puzzle" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.puzzle" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.puzzle" value="-encoding UTF-8 -source 9 -target 9 ${compiler.args}"/>
+  
+  <property name="puzzle.output.dir" value="${module.puzzle.basedir}/out/production/puzzle"/>
+  <property name="puzzle.testoutput.dir" value="${module.puzzle.basedir}/out/test/puzzle"/>
+  
+  <path id="puzzle.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="puzzle.module.production.classpath">
+    <path refid="${module.jdk.classpath.puzzle}"/>
+    <path refid="library.algs4.classpath"/>
+  </path>
+  
+  <path id="puzzle.runtime.production.module.classpath">
+    <pathelement location="${puzzle.output.dir}"/>
+    <path refid="library.algs4.classpath"/>
+  </path>
+  
+  <path id="puzzle.module.classpath">
+    <path refid="${module.jdk.classpath.puzzle}"/>
+    <pathelement location="${puzzle.output.dir}"/>
+    <path refid="library.algs4.classpath"/>
+  </path>
+  
+  <path id="puzzle.runtime.module.classpath">
+    <pathelement location="${puzzle.testoutput.dir}"/>
+    <pathelement location="${puzzle.output.dir}"/>
+    <path refid="library.algs4.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.puzzle">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.puzzle">
+    <patternset refid="excluded.from.module.puzzle"/>
+  </patternset>
+  
+  <path id="puzzle.module.sourcepath">
+    <dirset dir="${module.puzzle.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.puzzle" depends="compile.module.puzzle.production,compile.module.puzzle.tests" description="Compile module puzzle"/>
+  
+  <target name="compile.module.puzzle.production" depends="register.custom.compilers" description="Compile module puzzle; production classes">
+    <mkdir dir="${puzzle.output.dir}"/>
+    <javac2 destdir="${puzzle.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.puzzle}/javac">
+      <compilerarg line="${compiler.args.puzzle}"/>
+      <bootclasspath refid="puzzle.module.bootclasspath"/>
+      <classpath refid="puzzle.module.production.classpath"/>
+      <src refid="puzzle.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.puzzle"/>
+    </javac2>
+    
+    <copy todir="${puzzle.output.dir}">
+      <fileset dir="${module.puzzle.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.puzzle.tests" depends="register.custom.compilers,compile.module.puzzle.production" description="compile module puzzle; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.puzzle" description="cleanup module">
+    <delete dir="${puzzle.output.dir}"/>
+    <delete dir="${puzzle.testoutput.dir}"/>
+  </target>
+</project>

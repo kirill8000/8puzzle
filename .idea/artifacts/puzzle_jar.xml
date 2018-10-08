@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="puzzle:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/puzzle_jar</output-path>
+    <root id="archive" name="puzzle.jar">
+      <element id="module-output" name="puzzle" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/algs4.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
